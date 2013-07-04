@@ -19,7 +19,7 @@ using System.Linq;
 using System.Text;
 using System.Runtime.InteropServices;
 
-namespace UI.PInvoke
+namespace PInvoke
 {
     class Winuser
     {
@@ -46,7 +46,6 @@ namespace UI.PInvoke
 
 
         public const int ERROR_CLASS_ALREADY_EXISTS = 1410;
-
 
         // http://msdn.microsoft.com/en-us/library/windows/desktop/ms633587(v=vs.85).aspx
         [DllImport("user32.dll", SetLastError = true)]
@@ -75,15 +74,15 @@ namespace UI.PInvoke
 
         // http://msdn.microsoft.com/en-us/library/windows/desktop/ms633572(v=vs.85).aspx
         [DllImport("user32.dll", SetLastError = true)]
-        static extern IntPtr DefWindowProc(IntPtr hWnd, UInt32 msg, IntPtr wParam, IntPtr lParam);
+        public static extern IntPtr DefWindowProc(IntPtr hWnd, UInt32 msg, IntPtr wParam, IntPtr lParam);
 
         // http://msdn.microsoft.com/en-us/library/windows/desktop/ms633571(v=vs.85).aspx
         [DllImport("user32.dll")]
-        static extern IntPtr CallWindowProc(WndProc lpPrevWndFunc, IntPtr hWnd, UInt32 Msg, IntPtr wParam, IntPtr lParam);
+        public static extern IntPtr CallWindowProc(WndProc lpPrevWndFunc, IntPtr hWnd, UInt32 Msg, IntPtr wParam, IntPtr lParam);
 
         // http://msdn.microsoft.com/en-us/library/windows/desktop/ms632682(v=vs.85).aspx
         [DllImport("user32.dll", SetLastError = true)]
-        static extern Boolean DestroyWindow(IntPtr hWnd);
+        public static extern Boolean DestroyWindow(IntPtr hWnd);
 
 
         // SetWindowLong ?
