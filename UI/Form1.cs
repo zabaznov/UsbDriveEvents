@@ -7,6 +7,8 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using PInvoke;
+using System.Runtime.InteropServices;
+using System.Diagnostics;
 
 namespace UI
 {
@@ -19,19 +21,48 @@ namespace UI
 
         private void button1_Click(object sender, EventArgs e)
         {
-            Winuser.WNDCLASSEX wnd_class_ex = new Winuser.WNDCLASSEX();
-            wnd_class_ex.lpszClassName = "sda";
-            wnd_class_ex.lpfnWndProc = CustomWndProc;
+            // IntPtr hinstance = Marshal.GetHINSTANCE(System.Reflection.Assembly.GetExecutingAssembly().GetModule("UI.exe"));
+            
+            // Or returned by PInvoked LoadLibrary
+            IntPtr hInstance = Process.GetCurrentProcess().Handle;
+
+            if (hInstance == new IntPtr(-1))
+                throw new Win32Exception("Couldn't get modules instance");
+            
+            Winuser.WNDCLASSEX wnd_class_ex = new Winuser.WNDCLASSEX()
+            {
+                cbSize = (UInt32)Marshal.SizeOf(typeof(Winuser.WNDCLASSEX)),
+                style = 0x4000, // CS_GLOBALCLASS  (int)ClassStyles.CS_GLOBALCLASS,
+                lpfnWndProc = CustomWndProc,
+                cbClsExtra = 0,
+                cbWndExtra = 0,
+                hInstance = IntPtr.Zero,//hInstance, // NULL = application's HINSTANCE
+                hIcon = IntPtr.Zero,
+                hCursor = IntPtr.Zero,
+                hbrBackground = IntPtr.Zero,
+                lpszMenuName = null,
+                lpszClassName = "TestClass2",
+                hIconSm = IntPtr.Zero
+            };
 
             UInt16 class_atom = Winuser.RegisterClassEx(ref wnd_class_ex);
 
             int j = 6;
         }
 
-        private static IntPtr CustomWndProc(IntPtr hWnd, uint msg, IntPtr wParam, IntPtr lParam)
+        public static IntPtr CustomWndProc(IntPtr hWnd, uint msg, IntPtr wParam, IntPtr lParam)
         {
             int i = 5;
             return Winuser.DefWindowProc(hWnd, msg, wParam, lParam);
         }
     }
 }
+
+
+// Полезности:
+// http://social.msdn.microsoft.com/Forums/vstudio/en-US/8580a805-383b-4b17-8bd8-514da4a5f3a4/problems-with-pinvoke-createwindowex-and-registerclassex
+// http://msdn.microsoft.com/en-us/library/windows/desktop/ms633575(v=vs.85).aspx
+// http://bytes.com/topic/c-sharp/answers/428972-hinstance-hinstance-c
+// http://msdn.microsoft.com/en-us/library/windows/desktop/ms633574(v=vs.85).aspx
+// http://stackoverflow.com/questions/15462064/hinstance-in-createwindow
+// http://stackoverflow.com/questions/1123598/what-does-getmodulehandle-do-in-this-code

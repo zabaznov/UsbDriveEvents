@@ -21,6 +21,8 @@ using System.Runtime.InteropServices;
 
 namespace PInvoke
 {
+    using HWND = System.IntPtr;
+
     class Winuser
     {
         // http://msdn.microsoft.com/en-us/library/windows/desktop/ms633573(v=vs.85).aspx
