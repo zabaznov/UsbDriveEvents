@@ -93,3 +93,5 @@ namespace UI
 // http://stackoverflow.com/questions/15462064/hinstance-in-createwindow
 // http://stackoverflow.com/questions/1123598/what-does-getmodulehandle-do-in-this-code
 // http://www.pinvoke.net/default.aspx/user32/createwindowex.html?diff=y
+
+// http://www.codeproject.com/Articles/12121/Essential-P-Invoke

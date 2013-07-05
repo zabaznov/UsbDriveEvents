@@ -2,7 +2,12 @@
  * Общие примечания.
  * 1. В функциях типа CreateWindowEx использую целочисленный тип для полей-флагов (dwStyle),
  *    а не ввожу тип-перечисление, так как при создании окна предопределённого класса, флаги
- *    dwStyle будут дополняться флагами, специфическими данному классу. 
+ *    dwStyle будут дополняться флагами, специфическими данному классу.
+ * 2. Строки .NET по умолчанию маршаллятся как LPTSTR. Если строка (особенно в аргументе функции)
+ *    имеет другой тип (пусть даже LPСTSTR), нужно явно указывать тип строки для .NET, а именно,
+ *    [MarshalAs(UnmanagedType.LPTStr)].
+ * 3. CharSet в DllImport в первую очередь определяет, какая из функций будет вызываться — A или W.
+ *    Но также определяет, как будут трактоваться строки-аргументы. 
  */
 
 /*
@@ -29,7 +34,7 @@ namespace PInvoke
         public delegate IntPtr WndProc(IntPtr hWnd, UInt32 msg, IntPtr wParam, IntPtr lParam);
         
         // http://msdn.microsoft.com/en-us/library/windows/desktop/ms633577(v=vs.85).aspx
-        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Auto)]
+        [StructLayout(LayoutKind.Sequential)]
         public struct WNDCLASSEX
         {
             public UInt32 cbSize;
@@ -41,7 +46,9 @@ namespace PInvoke
             public IntPtr hIcon;
             public IntPtr hCursor;
             public IntPtr hbrBackground;
+            [MarshalAs(UnmanagedType.LPTStr)]
             public String lpszMenuName;
+            [MarshalAs(UnmanagedType.LPTStr)] // CAUTION: Works without it. On PInvoke it is said that this cause errors.
             public String lpszClassName;
             public IntPtr hIconSm;
         }
@@ -55,14 +62,16 @@ namespace PInvoke
         public static extern UInt16 RegisterClassEx([In] ref WNDCLASSEX lpwcx);
 
         // http://msdn.microsoft.com/en-us/library/windows/desktop/ms644899(v=vs.85).aspx
-        [DllImport("user32.dll", SetLastError = true)]
+        [DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Auto)]
         static extern Boolean UnregisterClass(String lpClassName, IntPtr hInstance);
 
         // http://msdn.microsoft.com/en-us/library/windows/desktop/ms632680(v=vs.85).aspx
         [DllImport("user32.dll", SetLastError = true)]
         public static extern IntPtr CreateWindowEx(
            UInt32 dwExStyle,
-           String lpClassName,
+           [MarshalAs(UnmanagedType.LPTStr)] // Otherwise — GLE 1407 after.
+           String lpClassName,    
+           [MarshalAs(UnmanagedType.LPTStr)]
            String lpWindowName,
            UInt32 dwStyle,
            Int32 x,
