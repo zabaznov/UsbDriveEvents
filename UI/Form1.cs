@@ -41,11 +41,37 @@ namespace UI
                 hCursor = IntPtr.Zero,
                 hbrBackground = IntPtr.Zero,
                 lpszMenuName = null,
-                lpszClassName = "TestClass2",
+                lpszClassName = "TestClass",
                 hIconSm = IntPtr.Zero
             };
 
             UInt16 class_atom = Winuser.RegisterClassEx(ref wnd_class_ex);
+
+            if (class_atom == 0)
+                throw new Win32Exception("Unable to register Window Class");
+
+            IntPtr hWnd = Winuser.CreateWindowEx
+            (
+                dwExStyle : 0,
+                lpClassName : "TestClass",
+                lpWindowName : "Window",
+                dwStyle : 0,
+                x : 0,
+                y : 0,
+                nWidth : 0,
+                nHeight : 0,
+                hWndParent : IntPtr.Zero,
+                hMenu : IntPtr.Zero,
+                hInstance : hInstance,
+                lpParam : IntPtr.Zero
+            );
+
+            /*if (hWnd == IntPtr.Zero)
+            {
+                throw new Win32Exception(Marshal.GetLastWin32Error());
+            }*/
+
+            int err = Marshal.GetLastWin32Error();
 
             int j = 6;
         }
@@ -66,3 +92,4 @@ namespace UI
 // http://msdn.microsoft.com/en-us/library/windows/desktop/ms633574(v=vs.85).aspx
 // http://stackoverflow.com/questions/15462064/hinstance-in-createwindow
 // http://stackoverflow.com/questions/1123598/what-does-getmodulehandle-do-in-this-code
+// http://www.pinvoke.net/default.aspx/user32/createwindowex.html?diff=y
