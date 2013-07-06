@@ -16,6 +16,7 @@
  *      Windows Data Types: http://msdn.microsoft.com/en-us/library/windows/desktop/aa383751(v=vs.85).aspx
  *      Fundamental Types (C++): http://msdn.microsoft.com/ru-ru/library/vstudio/cc953fe1(v=vs.100).aspx
  *      C# <-> .NET Types Table: http://msdn.microsoft.com/en-us/library/ya5y69ds.aspx
+ *      System Error Codes: http://msdn.microsoft.com/en-us/library/windows/desktop/ms681381(v=vs.85).aspx
  */
 
 using System;
@@ -53,7 +54,6 @@ namespace PInvoke
             public IntPtr hIconSm;
         }
 
-
         public const int ERROR_CLASS_ALREADY_EXISTS = 1410;
 
         // http://msdn.microsoft.com/en-us/library/windows/desktop/ms633587(v=vs.85).aspx
@@ -62,8 +62,11 @@ namespace PInvoke
         public static extern UInt16 RegisterClassEx([In] ref WNDCLASSEX lpwcx);
 
         // http://msdn.microsoft.com/en-us/library/windows/desktop/ms644899(v=vs.85).aspx
-        [DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Auto)]
-        static extern Boolean UnregisterClass(String lpClassName, IntPtr hInstance);
+        [DllImport("user32.dll", SetLastError = true)]
+        public static extern Boolean UnregisterClass(
+            [MarshalAs(UnmanagedType.LPTStr)]
+            String lpClassName,
+            IntPtr hInstance);
 
         // http://msdn.microsoft.com/en-us/library/windows/desktop/ms632680(v=vs.85).aspx
         [DllImport("user32.dll", SetLastError = true)]

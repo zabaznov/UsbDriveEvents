@@ -47,7 +47,13 @@ namespace UI
 
             UInt16 class_atom = Winuser.RegisterClassEx(ref wnd_class_ex);
 
-            if (class_atom == 0)
+            Boolean unregiter = Winuser.UnregisterClass("TestClass", hInstance);
+
+            int err = Marshal.GetLastWin32Error();
+
+            int j = 6;
+
+            /*if (class_atom == 0)
                 throw new Win32Exception("Unable to register Window Class");
 
             IntPtr hWnd = Winuser.CreateWindowEx
@@ -64,16 +70,13 @@ namespace UI
                 hMenu : IntPtr.Zero,
                 hInstance : hInstance,
                 lpParam : IntPtr.Zero
-            );
+            );*/
 
             /*if (hWnd == IntPtr.Zero)
             {
                 throw new Win32Exception(Marshal.GetLastWin32Error());
             }*/
 
-            int err = Marshal.GetLastWin32Error();
-
-            int j = 6;
         }
 
         public static IntPtr CustomWndProc(IntPtr hWnd, uint msg, IntPtr wParam, IntPtr lParam)
@@ -95,3 +98,5 @@ namespace UI
 // http://www.pinvoke.net/default.aspx/user32/createwindowex.html?diff=y
 
 // http://www.codeproject.com/Articles/12121/Essential-P-Invoke
+
+// I! http://stackoverflow.com/questions/9330517/how-to-listen-for-windows-broadcast-messages-in-net
