@@ -22,7 +22,7 @@ namespace UI
         private void button1_Click(object sender, EventArgs e)
         {
             // IntPtr hinstance = Marshal.GetHINSTANCE(System.Reflection.Assembly.GetExecutingAssembly().GetModule("UI.exe"));
-            
+            // hInstance = Marshal.GetHINSTANCE(this.GetType().Module);
             // Or returned by PInvoked LoadLibrary
             IntPtr hInstance = Process.GetCurrentProcess().Handle;
 
@@ -47,13 +47,13 @@ namespace UI
 
             UInt16 class_atom = Winuser.RegisterClassEx(ref wnd_class_ex);
 
-            Boolean unregiter = Winuser.UnregisterClass("TestClass", hInstance);
+            //Boolean unregiter = Winuser.UnregisterClass("TestClass", hInstance);
 
             int err = Marshal.GetLastWin32Error();
 
             int j = 6;
 
-            /*if (class_atom == 0)
+            if (class_atom == 0)
                 throw new Win32Exception("Unable to register Window Class");
 
             IntPtr hWnd = Winuser.CreateWindowEx
@@ -70,12 +70,12 @@ namespace UI
                 hMenu : IntPtr.Zero,
                 hInstance : hInstance,
                 lpParam : IntPtr.Zero
-            );*/
+            );
 
-            /*if (hWnd == IntPtr.Zero)
+            if (hWnd == IntPtr.Zero)
             {
                 throw new Win32Exception(Marshal.GetLastWin32Error());
-            }*/
+            }
 
         }
 
