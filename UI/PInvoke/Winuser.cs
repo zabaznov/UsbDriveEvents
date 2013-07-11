@@ -86,20 +86,29 @@ namespace PInvoke
            IntPtr hInstance,
            IntPtr lpParam);
 
+        // http://msdn.microsoft.com/en-us/library/windows/desktop/ms632682(v=vs.85).aspx
+        [DllImport("user32.dll", SetLastError = true)]
+        public static extern Boolean DestroyWindow(IntPtr hWnd);
+
         // http://msdn.microsoft.com/en-us/library/windows/desktop/ms633572(v=vs.85).aspx
         [DllImport("user32.dll", SetLastError = true)]
         public static extern IntPtr DefWindowProc(IntPtr hWnd, UInt32 msg, IntPtr wParam, IntPtr lParam);
 
         // http://msdn.microsoft.com/en-us/library/windows/desktop/ms633571(v=vs.85).aspx
-        [DllImport("user32.dll")]
+        [DllImport("user32.dll", SetLastError = true)]
         public static extern IntPtr CallWindowProc(WndProc lpPrevWndFunc, IntPtr hWnd, UInt32 Msg, IntPtr wParam, IntPtr lParam);
 
-        // http://msdn.microsoft.com/en-us/library/windows/desktop/ms632682(v=vs.85).aspx
+
+
+        // SetWindowLongPtr ?
+
+        // http://msdn.microsoft.com/en-us/library/windows/desktop/aa363431(v=vs.85).aspx
         [DllImport("user32.dll", SetLastError = true)]
-        public static extern Boolean DestroyWindow(IntPtr hWnd);
+        internal static extern IntPtr RegisterDeviceNotification(IntPtr hRecipient, IntPtr NotificationFilter, Int32 Flags);
 
-
-        // SetWindowLong ?
+        // http://msdn.microsoft.com/en-us/library/windows/desktop/aa363475(v=vs.85).aspx
+        [DllImport("user32.dll", SetLastError = true)]
+        internal static extern Boolean UnregisterDeviceNotification(IntPtr Handle);
     }
 
 

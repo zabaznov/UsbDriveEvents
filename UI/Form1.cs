@@ -100,3 +100,26 @@ namespace UI
 // http://www.codeproject.com/Articles/12121/Essential-P-Invoke
 
 // I! http://stackoverflow.com/questions/9330517/how-to-listen-for-windows-broadcast-messages-in-net
+
+// NativeWindow
+// http://www.dotnetframework.org/default.aspx/DotNET/DotNET/8@0/untmp/whidbey/REDBITS/ndp/fx/src/WinForms/Managed/System/WinForms/NativeWindow@cs/3/NativeWindow@cs
+
+// Wrapper
+// http://www.dotnetframework.org/default.aspx/DotNET/DotNET/8@0/untmp/WIN_WINDOWS/lh_tools_devdiv_wpf/Windows/wcp/Shared/MS/Win32/hwndwrapper@cs/1/hwndwrapper@cs
+
+// http://www.codeproject.com/Articles/60579/A-USB-Library-to-Detect-USB-Devices
+// http://www.codeproject.com/Articles/18062/Detecting-USB-Drive-Removal-in-a-C-Program
+// http://www.codeproject.com/Messages/2126647/Re-Csharp-USB-Detection.aspx
+
+// ! http://tempuzfugit.wordpress.com/2007/10/08/external-storage-unit-detection-with-c-in-net-usb-card-readers-etc/
+
+// Q & D http://stackoverflow.com/questions/3685615/usb-device-connected
+
+/*
+!! ЧИТАТЬ КОММЕНТАРИИ http://msdn.microsoft.com/en-us/library/windows/desktop/ms633591(v=vs.85).aspx
+ * и здесь http://www.pinvoke.net/default.aspx/user32.setwindowlong
+subclassing with GWL_WNDPROC is old-fashioned
+consider using the shell function:
+SetWindowSubclass()
+http://msdn.microsoft.com/en-us/library/bb762102%28VS.85%29.aspx
+*/
