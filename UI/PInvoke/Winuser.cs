@@ -23,6 +23,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+
 using System.Runtime.InteropServices;
 
 namespace PInvoke
@@ -105,6 +106,9 @@ namespace PInvoke
         // http://msdn.microsoft.com/en-us/library/windows/desktop/aa363431(v=vs.85).aspx
         [DllImport("user32.dll", SetLastError = true)]
         internal static extern IntPtr RegisterDeviceNotification(IntPtr hRecipient, IntPtr NotificationFilter, Int32 Flags);
+        [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        internal static extern IntPtr RegisterDeviceNotification(IntPtr hRecipient, Dbt.DEV_BROADCAST_DEVICEINTERFACE NotificationFilter, Int32 Flags);
+
 
         // http://msdn.microsoft.com/en-us/library/windows/desktop/aa363475(v=vs.85).aspx
         [DllImport("user32.dll", SetLastError = true)]
