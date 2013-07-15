@@ -87,6 +87,22 @@ namespace PInvoke
            IntPtr hInstance,
            IntPtr lpParam);
 
+        [DllImport("user32.dll", SetLastError = true)]
+        public static extern IntPtr CreateWindowEx(
+           UInt32 dwExStyle,
+           UInt16 lpClassName,
+           [MarshalAs(UnmanagedType.LPTStr)]
+           String lpWindowName,
+           UInt32 dwStyle,
+           Int32 x,
+           Int32 y,
+           Int32 nWidth,
+           Int32 nHeight,
+           IntPtr hWndParent,
+           IntPtr hMenu,
+           IntPtr hInstance,
+           IntPtr lpParam);
+
         // http://msdn.microsoft.com/en-us/library/windows/desktop/ms632682(v=vs.85).aspx
         [DllImport("user32.dll", SetLastError = true)]
         public static extern Boolean DestroyWindow(IntPtr hWnd);
@@ -100,7 +116,23 @@ namespace PInvoke
         public static extern IntPtr CallWindowProc(WndProc lpPrevWndFunc, IntPtr hWnd, UInt32 Msg, IntPtr wParam, IntPtr lParam);
 
         // SetWindowLongPtr ?
+        // http://msdn.microsoft.com/en-us/library/windows/desktop/ms633591(v=vs.85).aspx
+        /* Note that on 32 bit systems the procedure SetWindowLongPtr is not actually implemented
+         * in Windows (USER32.DLL) -- the function is defined in the headers to be SetWindowLong
+         * under 32 bit. Therefore if you are calling this function though a mechanism that
+         * does not inherit this redirection (using PInvoke from .NET / VB or directly calling
+         * GetProcAddress into USER32 e.g.) you can't simply switch to using SetWindowLongPtr,
+         * you will need to redirect to SetWindowLong on 32 bit yourself.
+         * Function will block on windows which do not respond */
+        [DllImport("user32.dll", SetLastError = true)]
+        private static extern IntPtr SetWindowLong(IntPtr hWnd, UInt32 nIndex, Int32 dwNewLong);
 
+        [DllImport("user32.dll", SetLastError = true)]
+        private static extern IntPtr SetWindowLong(IntPtr hWnd, Int32 nIndex, WndProc dwNewLong);
+
+        // http://msdn.microsoft.com/en-us/library/windows/desktop/ms633584(v=vs.85).aspx
+        [DllImport("user32.dll", SetLastError = true)]
+        static extern Int32 GetWindowLong(IntPtr hWnd, Int32 nIndex);
 
         // http://msdn.microsoft.com/en-us/library/windows/desktop/ms633529(v=vs.85).aspx
         [DllImport("user32.dll", SetLastError = true)]
