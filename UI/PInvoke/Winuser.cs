@@ -99,9 +99,15 @@ namespace PInvoke
         [DllImport("user32.dll", SetLastError = true)]
         public static extern IntPtr CallWindowProc(WndProc lpPrevWndFunc, IntPtr hWnd, UInt32 Msg, IntPtr wParam, IntPtr lParam);
 
-
-
         // SetWindowLongPtr ?
+
+
+        // http://msdn.microsoft.com/en-us/library/windows/desktop/ms633529(v=vs.85).aspx
+        [DllImport("user32.dll", SetLastError = true)]
+        public static extern Boolean IsWindowUnicode([In] HWND hWnd);
+
+
+
 
         // http://msdn.microsoft.com/en-us/library/windows/desktop/aa363431(v=vs.85).aspx
         [DllImport("user32.dll", SetLastError = true)]

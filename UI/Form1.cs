@@ -53,7 +53,7 @@ namespace UI
 
             int j = 6;
 
-            if (class_atom == 0)
+            /*if (class_atom == 0)
                 throw new Win32Exception("Unable to register Window Class");
 
             IntPtr hWnd = Winuser.CreateWindowEx
@@ -76,7 +76,7 @@ namespace UI
             {
                 throw new Win32Exception(Marshal.GetLastWin32Error());
             }
-
+            */
         }
 
         public static IntPtr CustomWndProc(IntPtr hWnd, uint msg, IntPtr wParam, IntPtr lParam)
@@ -123,3 +123,29 @@ consider using the shell function:
 SetWindowSubclass()
 http://msdn.microsoft.com/en-us/library/bb762102%28VS.85%29.aspx
 */
+
+
+// About Window Procedures (Subclassing and superclassing)
+// http://msdn.microsoft.com/en-us/library/windows/desktop/ms633569(v=vs.85).aspx
+// Window Classes (A & W versions, extra class & window bytes)
+// http://msdn.microsoft.com/en-us/library/windows/desktop/ms632596(v=vs.85).aspx
+// Window Properties
+// http://msdn.microsoft.com/en-us/library/windows/desktop/ms632594(v=vs.85).aspx
+
+// Attaching class instance to hWnd
+// http://www.codeproject.com/Articles/519247/Associating-a-Class-Structure-with-a-Window
+// http://web.archive.org/web/20051125022758/www.rpi.edu/~pudeyo/articles/wndproc/
+
+// Hooks in .NET
+// http://support.microsoft.com/kb/318804/en-us
+// http://www.codeproject.com/Articles/6362/Global-System-Hooks-in-NET
+// http://www.programmersforum.ru/showthread.php?t=117375 (последнее сообщение)
+
+
+// Организация кода
+// http://www.codeproject.com/Articles/5038/Using-Hooks-from-C
+
+
+http://www.infernodevelopment.com/c-win32-api-simple-gui-wrapper
+http://winapi.freetechsecrets.com/win32/WIN32Instance_Subclassing00000528.htm
+https://www.google.com/search?q=GetProcAddress+msdn&oq=GetProcAddress+msdn&aqs=chrome.0.57j0l3.2497j0&sourceid=chrome&ie=UTF-8#q=msdn+subclass+window+extra+bytes+class+instance&ei=_8DjUbH3J4KH4AT2soCAAg&start=10&sa=N&bav=on.2,or.r_qf.&bvm=bv.48705608,d.bGE&fp=f7bf4b684dff0332&biw=1777&bih=872
