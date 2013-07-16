@@ -58,19 +58,19 @@ namespace PInvoke
         public const int ERROR_CLASS_ALREADY_EXISTS = 1410;
 
         // http://msdn.microsoft.com/en-us/library/windows/desktop/ms633587(v=vs.85).aspx
-        [DllImport("user32.dll", SetLastError = true)]
+        [DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Auto)]
         [return: MarshalAs(UnmanagedType.U2)]
         public static extern UInt16 RegisterClassEx([In] ref WNDCLASSEX lpwcx);
 
         // http://msdn.microsoft.com/en-us/library/windows/desktop/ms644899(v=vs.85).aspx
-        [DllImport("user32.dll", SetLastError = true)]
+        [DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Auto)]
         public static extern Boolean UnregisterClass(
             [MarshalAs(UnmanagedType.LPTStr)]
             String lpClassName,
             IntPtr hInstance);
 
         // http://msdn.microsoft.com/en-us/library/windows/desktop/ms632680(v=vs.85).aspx
-        [DllImport("user32.dll", SetLastError = true)]
+        [DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Auto)]
         public static extern IntPtr CreateWindowEx(
            UInt32 dwExStyle,
            [MarshalAs(UnmanagedType.LPTStr)] // Otherwise — GLE 1407 after.
@@ -87,7 +87,7 @@ namespace PInvoke
            IntPtr hInstance,
            IntPtr lpParam);
 
-        [DllImport("user32.dll", SetLastError = true)]
+        [DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Auto)]
         public static extern IntPtr CreateWindowEx(
            UInt32 dwExStyle,
            UInt16 lpClassName,
@@ -104,15 +104,15 @@ namespace PInvoke
            IntPtr lpParam);
 
         // http://msdn.microsoft.com/en-us/library/windows/desktop/ms632682(v=vs.85).aspx
-        [DllImport("user32.dll", SetLastError = true)]
+        [DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Auto)]
         public static extern Boolean DestroyWindow(IntPtr hWnd);
 
         // http://msdn.microsoft.com/en-us/library/windows/desktop/ms633572(v=vs.85).aspx
-        [DllImport("user32.dll", SetLastError = true)]
+        [DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Auto)]
         public static extern IntPtr DefWindowProc(IntPtr hWnd, UInt32 msg, IntPtr wParam, IntPtr lParam);
 
         // http://msdn.microsoft.com/en-us/library/windows/desktop/ms633571(v=vs.85).aspx
-        [DllImport("user32.dll", SetLastError = true)]
+        [DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Auto)]
         public static extern IntPtr CallWindowProc(WndProc lpPrevWndFunc, IntPtr hWnd, UInt32 Msg, IntPtr wParam, IntPtr lParam);
 
         // SetWindowLongPtr ?
@@ -124,21 +124,19 @@ namespace PInvoke
          * GetProcAddress into USER32 e.g.) you can't simply switch to using SetWindowLongPtr,
          * you will need to redirect to SetWindowLong on 32 bit yourself.
          * Function will block on windows which do not respond */
-        [DllImport("user32.dll", SetLastError = true)]
-        private static extern IntPtr SetWindowLong(IntPtr hWnd, UInt32 nIndex, Int32 dwNewLong);
+        [DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Auto)]
+        public static extern IntPtr SetWindowLong(IntPtr hWnd, UInt32 nIndex, Int32 dwNewLong);
 
-        [DllImport("user32.dll", SetLastError = true)]
-        private static extern IntPtr SetWindowLong(IntPtr hWnd, Int32 nIndex, WndProc dwNewLong);
+        [DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Auto)]
+        public static extern IntPtr SetWindowLong(IntPtr hWnd, Int32 nIndex, WndProc dwNewLong);
 
         // http://msdn.microsoft.com/en-us/library/windows/desktop/ms633584(v=vs.85).aspx
-        [DllImport("user32.dll", SetLastError = true)]
-        static extern Int32 GetWindowLong(IntPtr hWnd, Int32 nIndex);
+        [DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Auto)]
+        public static extern Int32 GetWindowLong(IntPtr hWnd, Int32 nIndex);
 
         // http://msdn.microsoft.com/en-us/library/windows/desktop/ms633529(v=vs.85).aspx
-        [DllImport("user32.dll", SetLastError = true)]
+        [DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Auto)]
         public static extern Boolean IsWindowUnicode([In] HWND hWnd);
-
-
 
 
         // http://msdn.microsoft.com/en-us/library/windows/desktop/aa363431(v=vs.85).aspx

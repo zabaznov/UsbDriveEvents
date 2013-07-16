@@ -51,6 +51,8 @@ namespace UI
 
             int err = Marshal.GetLastWin32Error();
 
+            UInt16 atom = Winbase.GlobalFindAtom("TestClass");
+
             int j = 6;
 
             if (class_atom == 0)
@@ -84,6 +86,13 @@ namespace UI
             int i = 5;
             return Winuser.DefWindowProc(hWnd, msg, wParam, lParam);
         }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            SimpleNativeWindow snw = new SimpleNativeWindow();
+            IntPtr ip = snw.CreateWindow("TestClass", "TestWindow");
+            int gg = 46;
+        }
     }
 }
 
@@ -99,13 +108,21 @@ namespace UI
 
 // http://www.codeproject.com/Articles/12121/Essential-P-Invoke
 
+// Class name to atom
+// http://blogs.msdn.com/b/oldnewthing/archive/2004/10/11/240744.aspx
+// http://www.rsdn.ru/forum/winapi/2693864.all
+
 
 
 // NativeWindow
 // http://www.dotnetframework.org/default.aspx/DotNET/DotNET/8@0/untmp/whidbey/REDBITS/ndp/fx/src/WinForms/Managed/System/WinForms/NativeWindow@cs/3/NativeWindow@cs
-
-// Wrapper
+// UnsafeNativeMethods
+// http://www.dotnetframework.org/default.aspx/4@0/4@0/untmp/DEVDIV_TFS/Dev10/Releases/RTMRel/ndp/fx/src/WinForms/Managed/System/WinForms/UnsafeNativeMethods@cs/1305376/UnsafeNativeMethods@cs
+// NativeMethods
+// http://www.dotnetframework.org/default.aspx/4@0/4@0/untmp/DEVDIV_TFS/Dev10/Releases/RTMRel/ndp/fx/src/WinForms/Managed/System/WinForms/NativeMethods@cs/1305376/NativeMethods@cs
+// hwndwrapper
 // http://www.dotnetframework.org/default.aspx/DotNET/DotNET/8@0/untmp/WIN_WINDOWS/lh_tools_devdiv_wpf/Windows/wcp/Shared/MS/Win32/hwndwrapper@cs/1/hwndwrapper@cs
+
 
 // Detect USB device in C#
 // http://www.codeproject.com/Articles/18062/Detecting-USB-Drive-Removal-in-a-C-Program
@@ -114,8 +131,8 @@ namespace UI
 /*
 !! ЧИТАТЬ КОММЕНТАРИИ http://msdn.microsoft.com/en-us/library/windows/desktop/ms633591(v=vs.85).aspx
  * и здесь http://www.pinvoke.net/default.aspx/user32.setwindowlong
-
 */
+
 
 
 // About Window Procedures (Subclassing and superclassing)
