@@ -51,7 +51,7 @@ namespace UI
 
             int err = Marshal.GetLastWin32Error();
 
-            UInt16 atom = Winbase.GlobalFindAtom("TestClass");
+            Boolean b = WindowClass.IsRegistered("TestClass2");
 
             int j = 6;
 

@@ -138,6 +138,13 @@ namespace PInvoke
         [DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Auto)]
         public static extern Boolean IsWindowUnicode([In] HWND hWnd);
 
+        // http://msdn.microsoft.com/en-us/library/ms633579(v=VS.85).aspx
+        [DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Auto)]
+        public static extern Boolean GetClassInfoEx(
+            IntPtr hinst,
+            [MarshalAs(UnmanagedType.LPTStr)]String lpszClass,
+            ref WNDCLASSEX lpwcx);
+
 
         // http://msdn.microsoft.com/en-us/library/windows/desktop/aa363431(v=vs.85).aspx
         [DllImport("user32.dll", SetLastError = true)]

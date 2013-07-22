@@ -12,20 +12,23 @@ namespace UI
 {
     public class WindowClass
     {
-        private string name = null;
-        private UInt16 atom = 0;
-
-        public string Name
+        public static Boolean IsRegistered(string className)
         {
-            get { return name; }
-        }
+            IntPtr hinstance = Process.GetCurrentProcess().Handle;
+            Winuser.WNDCLASSEX wnd_class_ex = new Winuser.WNDCLASSEX();
+            wnd_class_ex.cbSize = (UInt32)Marshal.SizeOf(typeof(Winuser.WNDCLASSEX));
 
-        public UInt16 Atom
-        {
-            get { return atom; }
+            if (Winuser.GetClassInfoEx(hinstance, className, ref wnd_class_ex))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
-
-        public static WindowClass Register(string className)
+        
+        public static Boolean Register(string className)
         {
             // IntPtr hinstance = Marshal.GetHINSTANCE(System.Reflection.Assembly.GetExecutingAssembly().GetModule("UI.exe"));
             // hInstance = Marshal.GetHINSTANCE(this.GetType().Module);
@@ -56,23 +59,13 @@ namespace UI
             if (class_atom == 0)
             {
                 int err = Marshal.GetLastWin32Error();
-                if (err == Winuser.ERROR_CLASS_ALREADY_EXISTS)
-                {
-
-                }
-                else
-                {
+                if (err != Winuser.ERROR_CLASS_ALREADY_EXISTS)
+                {                
                     throw new Win32Exception("Unable to register Window Class");
                 }
             }
 
-            WindowClass wc = new WindowClass()
-            {
-                name = className
-                //atom = class_atom
-            };
-
-            return wc;
+            return true;
         }
 
         public static Boolean Unregister(string className)
@@ -80,7 +73,7 @@ namespace UI
             return Winuser.UnregisterClass(className, Process.GetCurrentProcess().Handle);
         }
 
-        public static IntPtr CustomWndProc(IntPtr hWnd, uint msg, IntPtr wParam, IntPtr lParam)
+        private static IntPtr CustomWndProc(IntPtr hWnd, uint msg, IntPtr wParam, IntPtr lParam)
         {
             int i = 5;
             return Winuser.DefWindowProc(hWnd, msg, wParam, lParam);
@@ -169,10 +162,10 @@ namespace UI
             return Winuser.DestroyWindow(this.Handle);
         }
 
-        public Boolean Subclass(Winuser.WndProc subclassWndProc)
+        /*public Boolean Subclass(Winuser.WndProc subclassWndProc)
         {
             this.windowWndProc = Winuser.SetWindowLong(this.Handle, Winuser.GWL_WNDPROC, 
-        }
+        }*/
 
         public static IntPtr CustomWndProc(IntPtr hWnd, uint msg, IntPtr wParam, IntPtr lParam)
         {
@@ -180,4 +173,101 @@ namespace UI
             return Winuser.DefWindowProc(hWnd, msg, wParam, lParam);
         }
     }
+
+    // MyNativeWindow class to create a window given a class name.
+    [System.Security.Permissions.PermissionSet(System.Security.Permissions.SecurityAction.Demand, Name = "FullTrust")]
+    public class MyNativeWindow : NativeWindow
+    {
+
+        // Constant values were found in the "windows.h" header file.
+        private const int WS_CHILD = 0x40000000,
+                          WS_VISIBLE = 0x10000000,
+                          WM_ACTIVATEAPP = 0x001C;
+
+        private int windowHandle;
+
+        private Boolean IsListening = false;
+
+        public MyNativeWindow(/*Object*/Form parent)
+        {
+
+            /*
+            if !IsRegistered("WindowClassName")
+                Register("WindowClassName");
+            */
+
+            CreateParams cp = new CreateParams();
+
+            // Fill in the CreateParams details.
+            cp.Caption = "Click here";
+            cp.ClassName = "Button";
+
+            // Set the position on the form
+            cp.X = 100;
+            cp.Y = 100;
+            cp.Height = 100;
+            cp.Width = 100;
+
+            // Specify the form as the parent.
+            cp.Parent = parent.Handle;
+
+            // Create as a child of the specified parent
+            cp.Style = WS_CHILD | WS_VISIBLE;
+
+            // Create the actual window
+            this.CreateHandle(cp);
+
+        }
+
+        public ~MyNativeWindow()
+        {
+            /*
+                if IsListening
+                    StopListen();
+                this.DestroyHandle();
+            */
+        }
+
+        public Boolean StartListen(/* VID&PID or Path*/)
+        {
+            /*
+            RegisterForDeviceNotifications()
+            */
+        }
+
+        public Boolean StopListen()
+        {
+
+        }
+
+        public delegate void DevicePresenceDelegate();
+
+        public DevicePresenceDelegate DeviceArrival;
+
+        public DevicePresenceDelegate DeviceRemoval;
+
+        // Listen to when the handle changes to keep the variable in sync
+        [System.Security.Permissions.PermissionSet(System.Security.Permissions.SecurityAction.Demand, Name = "FullTrust")]
+        protected override void OnHandleChange()
+        {
+            windowHandle = (int)this.Handle;
+        }
+
+        [System.Security.Permissions.PermissionSet(System.Security.Permissions.SecurityAction.Demand, Name = "FullTrust")]
+        protected override void WndProc(ref Message m)
+        {
+            // Listen for messages that are sent to the button window. Some messages are sent
+            // to the parent window instead of the button's window.
+
+            switch (m.Msg)
+            {
+                case WM_ACTIVATEAPP:
+                    // Do something here in response to messages
+                    break;
+            }
+            base.WndProc(ref m);
+        }
+    }
+}
+
 }
