@@ -7,6 +7,7 @@ using PInvoke;
 using System.Runtime.InteropServices;
 using System.Diagnostics;
 using System.ComponentModel;
+using System.Windows.Forms;
 
 namespace UI
 {
@@ -178,41 +179,29 @@ namespace UI
     [System.Security.Permissions.PermissionSet(System.Security.Permissions.SecurityAction.Demand, Name = "FullTrust")]
     public class MyNativeWindow : NativeWindow
     {
+        private IntPtr windowHandle;
 
-        // Constant values were found in the "windows.h" header file.
-        private const int WS_CHILD = 0x40000000,
-                          WS_VISIBLE = 0x10000000,
-                          WM_ACTIVATEAPP = 0x001C;
+        private Boolean isListening = false;
 
-        private int windowHandle;
+        private IntPtr deviceNotificationHandle = IntPtr.Zero;
 
-        private Boolean IsListening = false;
-
-        public MyNativeWindow(/*Object*/Form parent)
-        {
-
-            /*
-            if !IsRegistered("WindowClassName")
-                Register("WindowClassName");
-            */
-
-            CreateParams cp = new CreateParams();
-
-            // Fill in the CreateParams details.
-            cp.Caption = "Click here";
-            cp.ClassName = "Button";
-
-            // Set the position on the form
-            cp.X = 100;
-            cp.Y = 100;
-            cp.Height = 100;
-            cp.Width = 100;
-
-            // Specify the form as the parent.
-            cp.Parent = parent.Handle;
-
-            // Create as a child of the specified parent
-            cp.Style = WS_CHILD | WS_VISIBLE;
+        public MyNativeWindow(IntPtr hParent)
+        {            
+            // Register window class if miss one
+            if (!WindowClass.IsRegistered("NetEventListenerClass"))
+                WindowClass.Register("NetEventListenerClass");
+            
+            // Set parameters of the window
+            CreateParams cp = new CreateParams();            
+                cp.ClassName = "NetEventListenerClass";
+                cp.Caption = "NetEventListenerWindow";
+                cp.Style = 0;
+                cp.X = 0;
+                cp.Y = 0;
+                cp.Width = 0;
+                cp.Height = 0;
+                cp.Parent = hParent;
+                cp.Param = null;
 
             // Create the actual window
             this.CreateHandle(cp);
@@ -221,50 +210,70 @@ namespace UI
 
         public ~MyNativeWindow()
         {
-            /*
-                if IsListening
-                    StopListen();
-                this.DestroyHandle();
-            */
+            if (isListening)
+                StopListen();
+            this.DestroyHandle();
         }
-
-        public Boolean StartListen(/* VID&PID or Path*/)
-        {
-            /*
-            RegisterForDeviceNotifications()
-            */
-        }
-
-        public Boolean StopListen()
-        {
-
-        }
-
-        public delegate void DevicePresenceDelegate();
-
-        public DevicePresenceDelegate DeviceArrival;
-
-        public DevicePresenceDelegate DeviceRemoval;
 
         // Listen to when the handle changes to keep the variable in sync
         [System.Security.Permissions.PermissionSet(System.Security.Permissions.SecurityAction.Demand, Name = "FullTrust")]
         protected override void OnHandleChange()
         {
-            windowHandle = (int)this.Handle;
+            windowHandle = this.Handle;
         }
+
+        public Boolean SubscribeDeviceNotification(IntPtr hRecipient, string interfaceGuid)
+        {            
+            Dbt.DEV_BROADCAST_DEVICEINTERFACE devBroadcastDeviceInterface = new Dbt.DEV_BROADCAST_DEVICEINTERFACE(interfaceGuid);
+            this.deviceNotificationHandle = Winuser.RegisterDeviceNotification(hRecipient, devBroadcastDeviceInterface, Dbt.DEVICE_NOTIFY_WINDOW_HANDLE);
+            return (this.deviceNotificationHandle == IntPtr.Zero) ? false : true;
+        }
+
+        public Boolean UnsubscribeDeviceNotification()
+        {
+            return Winuser.UnregisterDeviceNotification(this.deviceNotificationHandle);
+        }
+
+        public Boolean StartListen(/* VID&PID or Path*/)
+        {
+            Boolean result = SubscribeDeviceNotification(windowHandle, ""); 
+            isListening = result;
+            return result;
+        }
+
+        public Boolean StopListen()
+        {
+            Boolean result = UnsubscribeDeviceNotification();
+            isListening = !result;
+            return result;
+        }
+
+        public delegate void DevicePresenceDelegate();
+
+        public DevicePresenceDelegate OnDeviceArrival;
+
+        public DevicePresenceDelegate OnDeviceRemoval;
 
         [System.Security.Permissions.PermissionSet(System.Security.Permissions.SecurityAction.Demand, Name = "FullTrust")]
         protected override void WndProc(ref Message m)
         {
-            // Listen for messages that are sent to the button window. Some messages are sent
-            // to the parent window instead of the button's window.
-
+            // Listen for messages that are sent to the window. 
             switch (m.Msg)
             {
-                case WM_ACTIVATEAPP:
-                    // Do something here in response to messages
-                    break;
+                case Dbt.WM_DEVICECHANGE:
+                    if (m.WParam.ToInt32() == Dbt.DBT_DEVICEARRIVAL)
+                    {
+                        bool b = DeviceNameMatch(hWnd, Msg, wParam, lParam, "{524cc09a-0a72-4d06-980e-afee3131196e}");
+                        if (OnDeviceArrival != null) OnDeviceArrival();
+                    }
+                    else if (m.WParam.ToInt32() == Dbt.DBT_DEVICEREMOVECOMPLETE)
+                    {
+                        bool b = DeviceNameMatch(hWnd, Msg, wParam, lParam, "{524cc09a-0a72-4d06-980e-afee3131196e}");
+                        if (OnDeviceRemoval != null) OnDeviceRemoval();
+                    }
+                    break; 
             }
+
             base.WndProc(ref m);
         }
     }
