@@ -208,7 +208,7 @@ namespace UI
 
         }
 
-        public ~MyNativeWindow()
+        ~MyNativeWindow()
         {
             if (isListening)
                 StopListen();
@@ -234,9 +234,9 @@ namespace UI
             return Winuser.UnregisterDeviceNotification(this.deviceNotificationHandle);
         }
 
-        public Boolean StartListen(/* VID&PID or Path*/)
+        public Boolean StartListen()
         {
-            Boolean result = SubscribeDeviceNotification(windowHandle, ""); 
+            Boolean result = SubscribeDeviceNotification(windowHandle, "3af3f480-41b5-4c24-b2a9-6aacf7de3d01"); 
             isListening = result;
             return result;
         }
@@ -250,7 +250,7 @@ namespace UI
 
         public delegate void DevicePresenceDelegate();
 
-        public DevicePresenceDelegate OnDeviceArrival;
+        public event EventHandler<DeviceArrivalArgs> OnDeviceArrival;
 
         public DevicePresenceDelegate OnDeviceRemoval;
 
@@ -263,12 +263,12 @@ namespace UI
                 case Dbt.WM_DEVICECHANGE:
                     if (m.WParam.ToInt32() == Dbt.DBT_DEVICEARRIVAL)
                     {
-                        bool b = DeviceNameMatch(hWnd, Msg, wParam, lParam, "{524cc09a-0a72-4d06-980e-afee3131196e}");
-                        if (OnDeviceArrival != null) OnDeviceArrival();
+                        //bool b = DeviceNameMatch(hWnd, Msg, wParam, lParam, "{524cc09a-0a72-4d06-980e-afee3131196e}");
+                        if (OnDeviceArrival != null) OnDeviceArrival(this, new DeviceArrivalArgs("sadfsafd"));
                     }
                     else if (m.WParam.ToInt32() == Dbt.DBT_DEVICEREMOVECOMPLETE)
                     {
-                        bool b = DeviceNameMatch(hWnd, Msg, wParam, lParam, "{524cc09a-0a72-4d06-980e-afee3131196e}");
+                        //bool b = DeviceNameMatch(hWnd, Msg, wParam, lParam, "{524cc09a-0a72-4d06-980e-afee3131196e}");
                         if (OnDeviceRemoval != null) OnDeviceRemoval();
                     }
                     break; 
@@ -279,4 +279,4 @@ namespace UI
     }
 }
 
-}
+

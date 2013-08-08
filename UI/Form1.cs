@@ -87,11 +87,26 @@ namespace UI
             return Winuser.DefWindowProc(hWnd, msg, wParam, lParam);
         }
 
+        private void DeviceArrival()
+        {
+            this.button2.Text = "Arrived";
+        }
+
+        private void DeviceRemoval()
+        {
+            this.button2.Text = "Removed";
+        }
+
         private void button2_Click(object sender, EventArgs e)
         {
-            SimpleNativeWindow snw = new SimpleNativeWindow();
+            /*SimpleNativeWindow snw = new SimpleNativeWindow();
             IntPtr ip = snw.CreateWindow("TestClass", "TestWindow");
-            int gg = 46;
+            int gg = 46;*/
+
+            MyNativeWindow nmw = new MyNativeWindow(IntPtr.Zero);
+            nmw.OnDeviceArrival += DeviceArrival;
+            nmw.OnDeviceRemoval += DeviceRemoval;
+            nmw.StartListen();
         }
     }
 }
